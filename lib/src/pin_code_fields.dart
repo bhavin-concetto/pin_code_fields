@@ -250,7 +250,8 @@ class PinCodeTextField extends StatefulWidget {
     /// Default create internal [AutofillGroup]
     this.useExternalAutoFillGroup = false,
     this.scrollPadding = const EdgeInsets.all(20),
-  })  : assert(obscuringCharacter.isNotEmpty),
+  })
+      : assert(obscuringCharacter.isNotEmpty),
         super(key: key);
 
   @override
@@ -280,27 +281,32 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
   late Animation<Offset> _offsetAnimation;
 
   late Animation<double> _cursorAnimation;
-  DialogConfig get _dialogConfig => widget.dialogConfig == null
-      ? DialogConfig()
-      : DialogConfig(
+
+  DialogConfig get _dialogConfig =>
+      widget.dialogConfig == null
+          ? DialogConfig()
+          : DialogConfig(
           affirmativeText: widget.dialogConfig!.affirmativeText,
           dialogContent: widget.dialogConfig!.dialogContent,
           dialogTitle: widget.dialogConfig!.dialogTitle,
           negativeText: widget.dialogConfig!.negativeText);
+
   PinTheme get _pinTheme => widget.pinTheme;
 
   Timer? _blinkDebounce;
 
-  TextStyle get _textStyle => TextStyle(
+  TextStyle get _textStyle =>
+      TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
       ).merge(widget.textStyle);
 
-  TextStyle get _hintStyle => _textStyle
-      .copyWith(
+  TextStyle get _hintStyle =>
+      _textStyle
+          .copyWith(
         color: _pinTheme.disabledColor,
       )
-      .merge(widget.hintStyle);
+          .merge(widget.hintStyle);
 
   bool get _hintAvailable => widget.hintCharacter != null;
 
@@ -358,11 +364,11 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
     if (widget.errorAnimationController != null) {
       _errorAnimationSubscription =
           widget.errorAnimationController!.stream.listen((errorAnimation) {
-        if (errorAnimation == ErrorAnimationType.shake) {
-          _controller.forward();
-          setState(() => isInErrorMode = true);
-        }
-      });
+            if (errorAnimation == ErrorAnimationType.shake) {
+              _controller.forward();
+              setState(() => isInErrorMode = true);
+            }
+          });
     }
     // If a default value is set in the TextEditingController, then set to UI
     if (_textEditingController!.text.isNotEmpty)
@@ -443,7 +449,7 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
             }
             //  delay the onComplete event handler to give the onChange event handler enough time to complete
             Future.delayed(Duration(milliseconds: 300),
-                () => widget.onCompleted!(currentText));
+                    () => widget.onCompleted!(currentText));
           }
 
           if (widget.autoDismissKeyboard) _focusNode!.unfocus();
@@ -460,7 +466,9 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
     // after duration
     if (widget.blinkWhenObscuring &&
         _textEditingController!.text.length >
-            _inputList.where((x) => x.isNotEmpty).length) {
+            _inputList
+                .where((x) => x.isNotEmpty)
+                .length) {
       setState(() {
         _hasBlinked = false;
       });
@@ -470,11 +478,9 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
       }
 
       _blinkDebounce = Timer(widget.blinkDuration, () {
-        if (mounted) {
-          setState(() {
-            _hasBlinked = true;
-          });
-        }
+        setState(() {
+          _hasBlinked = true;
+        });
       });
     }
   }
@@ -504,7 +510,7 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
       return _pinTheme.disabledColor;
     }
     if (((_selectedIndex == index) ||
-            (_selectedIndex == index + 1 && index + 1 == widget.length)) &&
+        (_selectedIndex == index + 1 && index + 1 == widget.length)) &&
         _focusNode!.hasFocus) {
       return _pinTheme.selectedColor;
     } else if (_selectedIndex > index) {
@@ -525,7 +531,9 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
 
     bool showObscured = !widget.blinkWhenObscuring ||
         (widget.blinkWhenObscuring && _hasBlinked) ||
-        index != _inputList.where((x) => x.isNotEmpty).length - 1;
+        index != _inputList
+            .where((x) => x.isNotEmpty)
+            .length - 1;
 
     if (widget.obscuringWidget != null) {
       if (showObscured) {
@@ -544,23 +552,23 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
     }
 
     final text =
-        widget.obscureText && _inputList[index].isNotEmpty && showObscured
-            ? widget.obscuringCharacter
-            : _inputList[index];
+    widget.obscureText && _inputList[index].isNotEmpty && showObscured
+        ? widget.obscuringCharacter
+        : _inputList[index];
     return widget.textGradient != null
         ? Gradiented(
-            gradient: widget.textGradient!,
-            child: Text(
-              text,
-              key: ValueKey(_inputList[index]),
-              style: _textStyle.copyWith(color: Colors.white),
-            ),
-          )
+      gradient: widget.textGradient!,
+      child: Text(
+        text,
+        key: ValueKey(_inputList[index]),
+        style: _textStyle.copyWith(color: Colors.white),
+      ),
+    )
         : Text(
-            text,
-            key: ValueKey(_inputList[index]),
-            style: _textStyle,
-          );
+      text,
+      key: ValueKey(_inputList[index]),
+      style: _textStyle,
+    );
   }
 
 // selects the right fill color for the field
@@ -569,7 +577,7 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
       return _pinTheme.disabledColor;
     }
     if (((_selectedIndex == index) ||
-            (_selectedIndex == index + 1 && index + 1 == widget.length)) &&
+        (_selectedIndex == index + 1 && index + 1 == widget.length)) &&
         _focusNode!.hasFocus) {
       return _pinTheme.selectedFillColor;
     } else if (_selectedIndex > index) {
@@ -581,12 +589,17 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
   /// Builds the widget to be shown
   Widget buildChild(int index) {
     if (((_selectedIndex == index) ||
-            (_selectedIndex == index + 1 && index + 1 == widget.length)) &&
+        (_selectedIndex == index + 1 && index + 1 == widget.length)) &&
         _focusNode!.hasFocus &&
         widget.showCursor) {
       final cursorColor = widget.cursorColor ??
-          Theme.of(widget.appContext).textSelectionTheme.cursorColor ??
-          Theme.of(context).accentColor;
+          Theme
+              .of(widget.appContext)
+              .textSelectionTheme
+              .cursorColor ??
+          Theme
+              .of(context)
+              .accentColor;
       final cursorHeight = widget.cursorHeight ?? _textStyle.fontSize! + 8;
 
       if ((_selectedIndex == index + 1 && index + 1 == widget.length)) {
@@ -635,67 +648,88 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
   Future<void> _showPasteDialog(String pastedText) {
     final formattedPastedText = pastedText
         .trim()
-        .substring(0, min(pastedText.trim().length, widget.length));
+        .substring(0, min(pastedText
+        .trim()
+        .length, widget.length));
 
     final defaultPastedTextStyle = TextStyle(
       fontWeight: FontWeight.bold,
-      color: Theme.of(context).accentColor,
+      color: Theme
+          .of(context)
+          .accentColor,
     );
 
     return showDialog(
       context: context,
       useRootNavigator: true,
-      builder: (context) => _dialogConfig.platform == Platform.iOS
+      builder: (context) =>
+      _dialogConfig.platform == Platform.iOS
           ? CupertinoAlertDialog(
-              title: Text(_dialogConfig.dialogTitle!),
-              content: RichText(
-                text: TextSpan(
-                  text: _dialogConfig.dialogContent,
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.button!.color,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: formattedPastedText,
-                      style: widget.pastedTextStyle ?? defaultPastedTextStyle,
-                    ),
-                    TextSpan(
-                      text: "?",
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.button!.color,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              actions: _getActionButtons(formattedPastedText),
-            )
-          : AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              title: Text(_dialogConfig.dialogTitle!),
-              content: RichText(
-                text: TextSpan(
-                  text: _dialogConfig.dialogContent,
-                  style: TextStyle(
-                      color: Theme.of(context).textTheme.button!.color),
-                  children: [
-                    TextSpan(
-                      text: formattedPastedText,
-                      style: widget.pastedTextStyle ?? defaultPastedTextStyle,
-                    ),
-                    TextSpan(
-                      text: " ?",
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.button!.color,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              actions: _getActionButtons(formattedPastedText),
+        title: Text(_dialogConfig.dialogTitle!),
+        content: RichText(
+          text: TextSpan(
+            text: _dialogConfig.dialogContent,
+            style: TextStyle(
+              color: Theme
+                  .of(context)
+                  .textTheme
+                  .button!
+                  .color,
             ),
+            children: [
+              TextSpan(
+                text: formattedPastedText,
+                style: widget.pastedTextStyle ?? defaultPastedTextStyle,
+              ),
+              TextSpan(
+                text: "?",
+                style: TextStyle(
+                  color: Theme
+                      .of(context)
+                      .textTheme
+                      .button!
+                      .color,
+                ),
+              )
+            ],
+          ),
+        ),
+        actions: _getActionButtons(formattedPastedText),
+      )
+          : AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        title: Text(_dialogConfig.dialogTitle!),
+        content: RichText(
+          text: TextSpan(
+            text: _dialogConfig.dialogContent,
+            style: TextStyle(
+                color: Theme
+                    .of(context)
+                    .textTheme
+                    .button!
+                    .color),
+            children: [
+              TextSpan(
+                text: formattedPastedText,
+                style: widget.pastedTextStyle ?? defaultPastedTextStyle,
+              ),
+              TextSpan(
+                text: " ?",
+                style: TextStyle(
+                  color: Theme
+                      .of(context)
+                      .textTheme
+                      .button!
+                      .color,
+                ),
+              )
+            ],
+          ),
+        ),
+        actions: _getActionButtons(formattedPastedText),
+      ),
     );
   }
 
@@ -736,6 +770,8 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
         enabledBorder: InputBorder.none,
         focusedBorder: InputBorder.none,
         disabledBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        focusedErrorBorder: InputBorder.none,
       ),
       style: TextStyle(
         color: Colors.transparent,
@@ -765,9 +801,9 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
               child: widget.useExternalAutoFillGroup
                   ? textField
                   : AutofillGroup(
-                      onDisposeAction: widget.onAutoFillDisposeAction,
-                      child: textField,
-                    ),
+                onDisposeAction: widget.onAutoFillDisposeAction,
+                child: textField,
+              ),
             ),
             Positioned(
               top: 0,
@@ -780,17 +816,17 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
                 },
                 onLongPress: widget.enabled
                     ? () async {
-                        var data = await Clipboard.getData("text/plain");
-                        if (data?.text?.isNotEmpty ?? false) {
-                          if (widget.beforeTextPaste != null) {
-                            if (widget.beforeTextPaste!(data!.text)) {
-                              _showPasteDialog(data.text!);
-                            }
-                          } else {
-                            _showPasteDialog(data!.text!);
-                          }
-                        }
+                  var data = await Clipboard.getData("text/plain");
+                  if (data?.text?.isNotEmpty ?? false) {
+                    if (widget.beforeTextPaste != null) {
+                      if (widget.beforeTextPaste!(data!.text)) {
+                        _showPasteDialog(data.text!);
                       }
+                    } else {
+                      _showPasteDialog(data!.text!);
+                    }
+                  }
+                }
                     : null,
                 child: Row(
                   mainAxisAlignment: widget.mainAxisAlignment,
@@ -826,15 +862,15 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
                 borderRadius: borderRadius,
                 border: _pinTheme.shape == PinCodeFieldShape.underline
                     ? Border(
-                        bottom: BorderSide(
-                          color: _getColorFromIndex(i),
-                          width: _pinTheme.borderWidth,
-                        ),
-                      )
+                  bottom: BorderSide(
+                    color: _getColorFromIndex(i),
+                    width: _pinTheme.borderWidth,
+                  ),
+                )
                     : Border.all(
-                        color: _getColorFromIndex(i),
-                        width: _pinTheme.borderWidth,
-                      ),
+                  color: _getColorFromIndex(i),
+                  width: _pinTheme.borderWidth,
+                ),
               ),
               child: Center(
                 child: AnimatedSwitcher(
@@ -875,7 +911,10 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
 
   void _onFocus() {
     if (_focusNode!.hasFocus &&
-        MediaQuery.of(widget.appContext).viewInsets.bottom == 0) {
+        MediaQuery
+            .of(widget.appContext)
+            .viewInsets
+            .bottom == 0) {
       _focusNode!.unfocus();
       Future.delayed(
           const Duration(microseconds: 1), () => _focusNode!.requestFocus());
