@@ -190,6 +190,9 @@ class PinCodeTextField extends StatefulWidget {
   /// Makes the pin cells readOnly
   final bool readOnly;
 
+  /// Error Text Style
+  final TextStyle? errorStyle;
+
   PinCodeTextField({
     Key? key,
     required this.appContext,
@@ -250,6 +253,7 @@ class PinCodeTextField extends StatefulWidget {
     /// Default create internal [AutofillGroup]
     this.useExternalAutoFillGroup = false,
     this.scrollPadding = const EdgeInsets.all(20),
+    this.errorStyle
   })
       : assert(obscuringCharacter.isNotEmpty),
         super(key: key);
@@ -764,6 +768,7 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
       // using same as background color so tha it can blend into the view
       cursorWidth: 0.01,
       decoration: InputDecoration(
+        errorStyle: widget.errorStyle,
         contentPadding: const EdgeInsets.all(0),
         border: InputBorder.none,
         fillColor: widget.backgroundColor,
